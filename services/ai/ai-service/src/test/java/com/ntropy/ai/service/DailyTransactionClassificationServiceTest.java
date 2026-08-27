@@ -26,13 +26,13 @@ class DailyTransactionClassificationServiceTest {
 
     @Test
     void savesDeterministicAndFastApiResultsAndUsesFallbackForMissingResult() {
-        FakeAccountClient accountClient =
-                new FakeAccountClient(
+        FakeTransactionAnalysisPort transactionAnalysisPort =
+                new FakeTransactionAnalysisPort(
                         List.of(
                                 target(
                                         1L,
                                         "ORDINARY",
-                                        "삼성생명 실손보험"
+                                        "삼성생명 자동차보험"
                                 ),
                                 target(
                                         2L,
@@ -42,7 +42,7 @@ class DailyTransactionClassificationServiceTest {
                                 target(
                                         3L,
                                         "ORDINARY",
-                                        "알 수 없는 상점"
+                                        "규칙에 없는 가맹점"
                                 )
                         )
                 );
@@ -52,7 +52,7 @@ class DailyTransactionClassificationServiceTest {
 
         /*
          * FastAPI가 2번 거래 결과만 반환하도록 구성합니다.
-         * 누락된 3번 거래는 ETC / VARIABLE로 저장되어야 합니다.
+         * 나머지 3번 거래는 ETC / VARIABLE로 저장되어야 합니다.
          */
         fastApiClient.results = List.of(
                 new TransactionClassificationResult(
@@ -65,7 +65,7 @@ class DailyTransactionClassificationServiceTest {
 
         DailyTransactionClassificationService service =
                 new DailyTransactionClassificationService(
-                        accountClient,
+                        transactionAnalysisPort,
                         fastApiClient,
                         new TransactionPreClassificationService(),
                         Runnable::run
@@ -86,21 +86,21 @@ class DailyTransactionClassificationServiceTest {
         );
 
         assertSaved(
-                accountClient.saved,
+                transactionAnalysisPort.saved,
                 1L,
                 "INSURANCE",
                 "FIXED"
         );
 
         assertSaved(
-                accountClient.saved,
+                transactionAnalysisPort.saved,
                 2L,
                 "FOOD",
                 "VARIABLE"
         );
 
         assertSaved(
-                accountClient.saved,
+                transactionAnalysisPort.saved,
                 3L,
                 "ETC",
                 "VARIABLE"
@@ -117,13 +117,13 @@ class DailyTransactionClassificationServiceTest {
                     target(
                             id,
                             "ORDINARY",
-                            "알 수 없는 상점 " + id
+                            "규칙에 없는 가맹점 " + id
                     )
             );
         }
 
-        FakeAccountClient accountClient =
-                new FakeAccountClient(targets);
+        FakeTransactionAnalysisPort transactionAnalysisPort =
+                new FakeTransactionAnalysisPort(targets);
 
         FakeFastApiClient fastApiClient =
                 new FakeFastApiClient();
@@ -131,7 +131,7 @@ class DailyTransactionClassificationServiceTest {
 
         DailyTransactionClassificationService service =
                 new DailyTransactionClassificationService(
-                        accountClient,
+                        transactionAnalysisPort,
                         fastApiClient,
                         new TransactionPreClassificationService(),
                         executor
@@ -150,15 +150,15 @@ class DailyTransactionClassificationServiceTest {
 
         assertEquals(
                 101,
-                accountClient.saved.size()
+                transactionAnalysisPort.saved.size()
         );
     }
 
     @Test
     void runsFastApiBatchesConcurrentlyOnTheConfiguredExecutor() {
-        List<DailyClassificationTargetTransaction> targets = new ArrayList<>();
+        List<ClassificationTargetTransaction> targets = new ArrayList<>();
         for (long id = 1; id <= 101; id++) {
-            targets.add(target(id, "ORDINARY", "알 수 없는 상점 " + id));
+            targets.add(target(id, "ORDINARY", "규칙에 없는 가맹점 " + id));
         }
 
         ConcurrentFastApiClient fastApiClient = new ConcurrentFastApiClient();
@@ -166,7 +166,7 @@ class DailyTransactionClassificationServiceTest {
         try {
             DailyTransactionClassificationService service =
                     new DailyTransactionClassificationService(
-                            new FakeAccountClient(targets),
+                            new FakeTransactionAnalysisPort(targets),
                             fastApiClient,
                             new TransactionPreClassificationService(),
                             executor
@@ -181,13 +181,13 @@ class DailyTransactionClassificationServiceTest {
 
     @Test
     void invalidFastApiResultUsesFallback() {
-        FakeAccountClient accountClient =
-                new FakeAccountClient(
+        FakeTransactionAnalysisPort transactionAnalysisPort =
+                new FakeTransactionAnalysisPort(
                         List.of(
                                 target(
                                         1L,
                                         "ORDINARY",
-                                        "알 수 없는 상점"
+                                        "규칙에 없는 가맹점"
                                 )
                         )
                 );
@@ -196,8 +196,8 @@ class DailyTransactionClassificationServiceTest {
                 new FakeFastApiClient();
 
         /*
-         * 허용하지 않는 category와 expenseType을 반환하면
-         * 해당 응답을 신뢰하지 않고 fallback합니다.
+         * 허용되지 않는 category와 expenseType을 반환하면
+         * 해당 응답은 신뢰하지 않고 fallback합니다.
          */
         fastApiClient.results = List.of(
                 new TransactionClassificationResult(
@@ -210,7 +210,7 @@ class DailyTransactionClassificationServiceTest {
 
         DailyTransactionClassificationService service =
                 new DailyTransactionClassificationService(
-                        accountClient,
+                        transactionAnalysisPort,
                         fastApiClient,
                         new TransactionPreClassificationService(),
                         Runnable::run
@@ -219,7 +219,7 @@ class DailyTransactionClassificationServiceTest {
         service.run();
 
         assertSaved(
-                accountClient.saved,
+                transactionAnalysisPort.saved,
                 1L,
                 "ETC",
                 "VARIABLE"
@@ -228,8 +228,8 @@ class DailyTransactionClassificationServiceTest {
 
     @Test
     void continuesUntilAccountServiceReturnsNoMorePages() {
-        FakeAccountClient accountClient =
-                new FakeAccountClient(
+        FakeTransactionAnalysisPort transactionAnalysisPort =
+                new FakeTransactionAnalysisPort(
                         List.of(
                                 List.of(
                                         target(
@@ -241,8 +241,8 @@ class DailyTransactionClassificationServiceTest {
                                 List.of(
                                         target(
                                                 2L,
-                                                "LOAN",
-                                                "대출상환"
+                                                "ORDINARY",
+                                                "카드출금분"
                                         )
                                 )
                         ),
@@ -251,7 +251,7 @@ class DailyTransactionClassificationServiceTest {
 
         DailyTransactionClassificationService service =
                 new DailyTransactionClassificationService(
-                        accountClient,
+                        transactionAnalysisPort,
                         new FakeFastApiClient(),
                         new TransactionPreClassificationService(),
                         Runnable::run
@@ -267,26 +267,27 @@ class DailyTransactionClassificationServiceTest {
          */
         assertEquals(
                 3,
-                accountClient.queryCalls
+                transactionAnalysisPort.queryCalls
         );
 
         assertEquals(
                 2,
-                accountClient.saved.size()
+                transactionAnalysisPort.saved.size()
         );
     }
 
     @Test
     void classifiesOnlyTheRequestedUsersUnanalyzedTransactions() {
-        FakeAccountClient accountClient = new FakeAccountClient(
+        FakeTransactionAnalysisPort transactionAnalysisPort = new FakeTransactionAnalysisPort(
                 List.of(target(1L, "ORDINARY", "스타벅스"))
         );
         DailyTransactionClassificationService service = new DailyTransactionClassificationService(
-                accountClient, new FakeFastApiClient(), new TransactionPreClassificationService(), Runnable::run
+                transactionAnalysisPort, new FakeFastApiClient(), new TransactionPreClassificationService(),
+                Runnable::run
         );
 
         assertEquals(1, service.classifyUnanalyzedTransactions(42L));
-        assertEquals(List.of(42L, 42L), accountClient.queriedUserIds);
+        assertEquals(List.of(42L, 42L), transactionAnalysisPort.queriedUserIds);
     }
 
     private void assertSaved(
@@ -412,7 +413,7 @@ class DailyTransactionClassificationServiceTest {
         }
     }
 
-    private static class FakeAccountClient
+    private static class FakeTransactionAnalysisPort
             implements TransactionAnalysisPort {
 
         private final List<
@@ -426,7 +427,7 @@ class DailyTransactionClassificationServiceTest {
         private final List<TransactionAnalysisResult> saved =
                 new ArrayList<>();
 
-        private FakeAccountClient(
+        private FakeTransactionAnalysisPort(
                 List<ClassificationTargetTransaction> nextPage
         ) {
             this.pages = List.of(
@@ -434,7 +435,7 @@ class DailyTransactionClassificationServiceTest {
             );
         }
 
-        private FakeAccountClient(
+        private FakeTransactionAnalysisPort(
                 List<List<ClassificationTargetTransaction>> pages,
                 boolean multiplePages
         ) {

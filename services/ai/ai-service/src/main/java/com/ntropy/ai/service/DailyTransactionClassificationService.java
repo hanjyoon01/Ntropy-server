@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.ntropy.ai.client.fastapi.FastApiTransactionClassificationClient;
@@ -20,16 +23,17 @@ import com.ntropy.ai.port.account.TransactionAnalysisPort;
 import com.ntropy.ai.port.account.TransactionAnalysisResult;
 import com.ntropy.ai.api.client.TransactionClassificationCommandClient;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * 미분석 거래를 Spring 규칙과 FastAPI로 분류하고
  * TXN_ANALYSIS에 저장하는 일간 배치 서비스입니다.
+ *
+ * <p>FastAPI 배치 호출은 {@code transactionClassificationExecutor}(이슈 #232)로 제한된
+ * 동시성 하에 병렬 실행하며, 페이지·배치 단위로 처리 시간을 계측해 로그로 남깁니다.</p>
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class DailyTransactionClassificationService implements TransactionClassificationCommandClient {
 
     private static final int DB_PAGE_SIZE = 500;
@@ -65,6 +69,20 @@ public class DailyTransactionClassificationService implements TransactionClassif
     private final TransactionPreClassificationService
             preClassificationService;
 
+    private final Executor classificationExecutor;
+
+    public DailyTransactionClassificationService(
+            TransactionAnalysisPort transactionAnalysisPort,
+            FastApiTransactionClassificationClient fastApiClient,
+            TransactionPreClassificationService preClassificationService,
+            @Qualifier("transactionClassificationExecutor") Executor classificationExecutor
+    ) {
+        this.transactionAnalysisPort = transactionAnalysisPort;
+        this.fastApiClient = fastApiClient;
+        this.preClassificationService = preClassificationService;
+        this.classificationExecutor = classificationExecutor;
+    }
+
     /**
      * TXN_ANALYSIS가 없는 거래가 더 이상 없을 때까지
      * 최대 500건씩 반복해서 처리합니다.
@@ -72,8 +90,11 @@ public class DailyTransactionClassificationService implements TransactionClassif
      * @return 저장한 전체 거래 분석 결과 수
      */
     public int run() {
-        return runPages(() -> transactionAnalysisPort
-                .findUnanalyzedTransactions(DB_PAGE_SIZE));
+        return runPages(
+                "all-users",
+                () -> transactionAnalysisPort
+                        .findUnanalyzedTransactions(DB_PAGE_SIZE)
+        );
     }
 
     /** 계좌 연동을 마친 특정 사용자의 미분류 거래만 즉시 처리합니다. */
@@ -82,35 +103,54 @@ public class DailyTransactionClassificationService implements TransactionClassif
         if (userId == null || userId <= 0) {
             throw new IllegalArgumentException("userId는 양수여야 합니다.");
         }
-        return runPages(() -> transactionAnalysisPort
-                .findUnanalyzedTransactionsByUserId(userId, DB_PAGE_SIZE));
+        return runPages(
+                "userId=" + userId,
+                () -> transactionAnalysisPort
+                        .findUnanalyzedTransactionsByUserId(userId, DB_PAGE_SIZE)
+        );
     }
 
     private int runPages(
+            String scope,
             Supplier<List<ClassificationTargetTransaction>> targetSupplier
     ) {
+        long runStartedAt = System.nanoTime();
         int totalProcessed = 0;
+        int pageNumber = 0;
 
         while (true) {
+            long readStartedAt = System.nanoTime();
             List<ClassificationTargetTransaction> targets = targetSupplier.get();
+            long dbReadMillis = elapsedMillis(readStartedAt);
 
             if (targets == null || targets.isEmpty()) {
+                log.info(
+                        "[일간 소비 분류] 실행 완료. scope={}, totalProcessed={}, "
+                                + "pages={}, totalElapsedMs={}",
+                        scope, totalProcessed, pageNumber, elapsedMillis(runStartedAt)
+                );
                 return totalProcessed;
             }
 
+            pageNumber++;
+            long classifyStartedAt = System.nanoTime();
             List<TransactionAnalysisResult> analyses =
-                    classifyPage(targets);
+                    classifyPage(scope, pageNumber, targets);
+            long classifyMillis = elapsedMillis(classifyStartedAt);
 
+            long saveStartedAt = System.nanoTime();
             transactionAnalysisPort
                     .saveDailyTransactionAnalyses(analyses);
+            long dbSaveMillis = elapsedMillis(saveStartedAt);
 
             totalProcessed += analyses.size();
 
             log.info(
                     "[일간 소비 분류] 페이지 저장 완료. "
-                            + "pageSize={}, totalProcessed={}",
-                    analyses.size(),
-                    totalProcessed
+                            + "scope={}, page={}, pageSize={}, totalProcessed={}, dbReadMs={}, "
+                            + "classificationMs={}, dbSaveMs={}",
+                    scope, pageNumber, analyses.size(), totalProcessed, dbReadMillis,
+                    classifyMillis, dbSaveMillis
             );
         }
     }
@@ -118,8 +158,13 @@ public class DailyTransactionClassificationService implements TransactionClassif
     /**
      * 조회한 한 페이지의 거래를 Spring 결정적 규칙 대상과
      * FastAPI 대상 거래로 분리합니다.
+     *
+     * <p>FastAPI 대상은 최대 100건 단위 배치로 나눠 {@link #classificationExecutor}로
+     * 병렬 호출합니다.</p>
      */
     private List<TransactionAnalysisResult> classifyPage(
+            String scope,
+            int pageNumber,
             List<ClassificationTargetTransaction> targets
     ) {
         List<TransactionAnalysisResult> analyses =
@@ -141,8 +186,12 @@ public class DailyTransactionClassificationService implements TransactionClassif
 
         /*
          * FastAPI #33의 요청 최대 크기가 100건이므로
-         * 최대 100건씩 나눠서 호출합니다.
+         * 최대 100건씩 나눠서 병렬로 호출합니다.
          */
+        List<CompletableFuture<List<TransactionAnalysisResult>>> futures =
+                new ArrayList<>();
+
+        int batchNumber = 0;
         for (
                 int start = 0;
                 start < fastApiTargets.size();
@@ -153,12 +202,30 @@ public class DailyTransactionClassificationService implements TransactionClassif
                     fastApiTargets.size()
             );
 
-            analyses.addAll(
-                    classifyWithFastApi(
-                            fastApiTargets.subList(start, end)
+            List<ClassificationTargetTransaction> batch =
+                    List.copyOf(fastApiTargets.subList(start, end));
+            int currentBatchNumber = ++batchNumber;
+            futures.add(
+                    CompletableFuture.supplyAsync(
+                            () -> classifyWithFastApi(
+                                    scope, pageNumber, batch, currentBatchNumber
+                            ),
+                            classificationExecutor
                     )
             );
         }
+
+        for (CompletableFuture<List<TransactionAnalysisResult>> future : futures) {
+            analyses.addAll(future.join());
+        }
+
+        log.info(
+                "[일간 소비 분류] 페이지 분류 완료. scope={}, page={}, "
+                        + "targets={}, deterministic={}, "
+                        + "fastApiTargets={}, fastApiBatches={}",
+                scope, pageNumber, targets.size(), analyses.size() - fastApiTargets.size(),
+                fastApiTargets.size(), futures.size()
+        );
 
         return analyses;
     }
@@ -171,8 +238,12 @@ public class DailyTransactionClassificationService implements TransactionClassif
      * ETC / VARIABLE로 확정합니다.
      */
     private List<TransactionAnalysisResult> classifyWithFastApi(
-            List<ClassificationTargetTransaction> targets
+            String scope,
+            int pageNumber,
+            List<ClassificationTargetTransaction> targets,
+            int batchNumber
     ) {
+        long startedAt = System.nanoTime();
         Map<Long, ClassificationTargetTransaction> targetById =
                 new HashMap<>();
 
@@ -237,29 +308,43 @@ public class DailyTransactionClassificationService implements TransactionClassif
         } catch (Exception exception) {
             log.warn(
                     "[일간 소비 분류] FastAPI 호출 실패. "
-                            + "fallbackCount={}",
-                    targets.size(),
+                            + "scope={}, page={}, batch={}, fallbackCount={}",
+                    scope, pageNumber, batchNumber, targets.size(),
                     exception
             );
         }
 
         List<TransactionAnalysisResult> completed =
                 new ArrayList<>();
+        int fallbackCount = 0;
 
         /*
          * FastAPI 응답 순서와 관계없이 원래 요청 순서대로 저장 결과를
          * 생성하고, 결과가 없는 거래는 반드시 fallback 처리합니다.
          */
         for (ClassificationTargetTransaction target : targets) {
-            completed.add(
-                    validResults.getOrDefault(
-                            target.transactionId(),
-                            fallback(target.transactionId())
-                    )
-            );
+            TransactionAnalysisResult result = validResults.get(target.transactionId());
+            if (result == null) {
+                fallbackCount++;
+                result = fallback(target.transactionId());
+            }
+            completed.add(result);
         }
 
+        log.info(
+                "[일간 소비 분류] FastAPI 배치 완료. scope={}, page={}, "
+                        + "batch={}, requestCount={}, "
+                        + "validCount={}, fallbackCount={}, elapsedMs={}",
+                scope, pageNumber, batchNumber, targets.size(),
+                validResults.size(), fallbackCount,
+                elapsedMillis(startedAt)
+        );
+
         return completed;
+    }
+
+    private static long elapsedMillis(long startedAt) {
+        return (System.nanoTime() - startedAt) / 1_000_000L;
     }
 
     /**

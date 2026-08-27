@@ -597,12 +597,21 @@ class LocalFinancialAccountCommandClientTest {
         }
 
         @Override
+        public void upsertAll(List<Account> accounts) {
+        }
+
+        @Override
         public void updateAccountDetails(Account account) {
         }
 
         @Override
         public Account findByConnectionIdAndAccountNoHash(Long codefConnectionId, String accountNoHash) {
             return null;
+        }
+
+        @Override
+        public List<Account> findByConnectionIdAndAccountNoHashes(Long codefConnectionId, List<String> accountNoHashes) {
+            return List.of();
         }
 
         @Override
@@ -691,6 +700,11 @@ class LocalFinancialAccountCommandClientTest {
                 return null;
             }
             return connection;
+        }
+
+        @Override
+        public List<CodefConnection> findByUserIdsAndProvider(List<Long> userIds, String provider) {
+            return List.of();
         }
     }
 }
