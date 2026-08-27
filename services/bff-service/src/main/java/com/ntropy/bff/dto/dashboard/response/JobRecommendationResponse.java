@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.dashboard.response;
 
-import com.ntropy.common.dto.work.summary.RecommendedJobHoursSummary;
+import com.ntropy.work.api.dto.summary.RecommendedJobHoursSummary;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

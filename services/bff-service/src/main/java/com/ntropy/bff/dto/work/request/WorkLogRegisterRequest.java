@@ -3,7 +3,7 @@ package com.ntropy.bff.dto.work.request;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import com.ntropy.common.dto.work.command.WorkLogRegisterCommand;
+import com.ntropy.work.api.dto.command.WorkLogRegisterCommand;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

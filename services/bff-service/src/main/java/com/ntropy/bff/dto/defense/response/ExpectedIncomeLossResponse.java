@@ -1,7 +1,7 @@
 package com.ntropy.bff.dto.defense.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ntropy.common.dto.defense.summary.ExpectedIncomeLossSummary;
+import com.ntropy.defense.api.dto.summary.ExpectedIncomeLossSummary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

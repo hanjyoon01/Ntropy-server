@@ -1,5 +1,8 @@
 rootProject.name = 'Ntropy'
 include 'common', 'api'
-include 'services:user-service', 'services:account-service', 'services:work-service',
-        'services:diagnosis-service', 'services:defense-service', 'services:payment-service',
-        'services:notification-service', 'services:bff-service', 'services:ai-service'
+include 'services:user:user-service', 'services:account:account-service', 'services:work:work-service',
+        'services:diagnosis:diagnosis-service', 'services:defense:defense-service', 'services:payment:payment-service',
+        'services:notification:notification-service', 'services:bff-service', 'services:ai:ai-service'
+include 'services:user:user-api', 'services:account:account-api', 'services:work:work-api',
+        'services:diagnosis:diagnosis-api', 'services:defense:defense-api', 'services:payment:payment-api',
+        'services:notification:notification-api', 'services:ai:ai-api'

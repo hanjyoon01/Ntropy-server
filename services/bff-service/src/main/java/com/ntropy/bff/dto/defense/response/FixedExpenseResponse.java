@@ -1,8 +1,8 @@
 package com.ntropy.bff.dto.defense.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ntropy.common.dto.defense.summary.FixedExpenseSummary;
-import com.ntropy.common.dto.defense.summary.FixedExpenseMaintainStatus;
+import com.ntropy.defense.api.dto.summary.FixedExpenseSummary;
+import com.ntropy.defense.api.dto.summary.FixedExpenseMaintainStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

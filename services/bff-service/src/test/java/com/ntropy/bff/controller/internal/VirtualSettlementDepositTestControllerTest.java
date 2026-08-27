@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.ntropy.bff.dto.common.ApiResponse;
-import com.ntropy.common.client.VirtualSettlementDepositBatchCommandClient;
-import com.ntropy.common.client.VirtualSettlementDepositBatchCommandClient.BatchResult;
+import com.ntropy.work.api.client.VirtualSettlementDepositBatchCommandClient;
+import com.ntropy.work.api.client.VirtualSettlementDepositBatchCommandClient.BatchResult;
 
 class VirtualSettlementDepositTestControllerTest {
 

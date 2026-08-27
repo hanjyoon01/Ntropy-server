@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ntropy.common.dto.account.PageSummary;
-import com.ntropy.common.dto.notification.NotificationSummary;
+import com.ntropy.notification.api.dto.NotificationSummary;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

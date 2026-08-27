@@ -1,0 +1,23 @@
+dependencies {
+    implementation project(':common')
+    implementation project(':services:work:work-api')
+    implementation project(':services:user:user-api')
+    implementation project(':services:account:account-api')
+    implementation project(':services:notification:notification-api')
+    implementation "org.springframework:spring-webmvc:${springVersion}"
+    implementation "org.springframework:spring-tx:${springVersion}"
+    implementation 'org.mybatis:mybatis-spring:2.1.2'
+    implementation 'org.mybatis:mybatis:3.5.9'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.4'
+    implementation 'org.slf4j:slf4j-api:2.0.12'
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    // ?ŒìŠ¤?¸ì—???¤ì œ DB ?°ê²°??ê²€ì¦í•  ?Œë§Œ ?„ìš” (?´ì˜ ì½”ë“œ??api ëª¨ë“ˆ??RootConfigê°€ DataSourceë¥??œê³µ)
+    testImplementation 'com.zaxxer:HikariCP:5.1.0'
+    testRuntimeOnly 'mysql:mysql-connector-java:8.0.33'
+    testImplementation "org.springframework:spring-jdbc:${springVersion}"
+    testImplementation "org.springframework:spring-test:${springVersion}"
+    testImplementation "org.springframework:spring-tx:${springVersion}"
+}

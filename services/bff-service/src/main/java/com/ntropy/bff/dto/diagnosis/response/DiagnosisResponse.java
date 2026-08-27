@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ntropy.common.dto.diagnosis.DiagnosisResultSummary;
+import com.ntropy.diagnosis.api.dto.DiagnosisResultSummary;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

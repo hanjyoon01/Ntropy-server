@@ -21,9 +21,9 @@ import com.ntropy.bff.dto.work.request.JobUpdateRequest;
 import com.ntropy.bff.dto.work.response.JobsResponse;
 import com.ntropy.bff.dto.common.ApiResponse;
 import com.ntropy.bff.security.AuthenticatedUserIdResolver;
-import com.ntropy.common.client.JobCandidateQueryClient;
-import com.ntropy.common.client.JobCommandClient;
-import com.ntropy.common.client.JobQueryClient;
+import com.ntropy.work.api.client.JobCandidateQueryClient;
+import com.ntropy.work.api.client.JobCommandClient;
+import com.ntropy.work.api.client.JobQueryClient;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

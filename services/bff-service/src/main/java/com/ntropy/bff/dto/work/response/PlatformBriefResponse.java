@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.work.response;
 
-import com.ntropy.common.dto.work.summary.PlatformBrief;
+import com.ntropy.work.api.dto.summary.PlatformBrief;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

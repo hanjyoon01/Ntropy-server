@@ -29,10 +29,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ntropy.bff.exception.GlobalExceptionHandler;
 import com.ntropy.bff.security.AuthenticatedUserIdResolver;
-import com.ntropy.common.client.AiReportEmailDeliveryClient;
-import com.ntropy.common.client.AiReportQueryClient;
-import com.ntropy.common.dto.ai.AiReportEmailDeliverySummary;
-import com.ntropy.common.dto.ai.AiReportSummary;
+import com.ntropy.ai.api.client.AiReportEmailDeliveryClient;
+import com.ntropy.ai.api.client.AiReportQueryClient;
+import com.ntropy.ai.api.dto.AiReportEmailDeliverySummary;
+import com.ntropy.ai.api.dto.AiReportSummary;
 
 class AiReportControllerContractTest {
 

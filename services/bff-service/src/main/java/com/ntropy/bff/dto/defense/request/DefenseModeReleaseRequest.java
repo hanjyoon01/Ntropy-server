@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.defense.request;
 
-import com.ntropy.common.dto.defense.command.DefenseModeReleaseCommand;
+import com.ntropy.defense.api.dto.command.DefenseModeReleaseCommand;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

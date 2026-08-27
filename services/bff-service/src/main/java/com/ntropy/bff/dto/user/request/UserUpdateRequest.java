@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.user.request;
 
-import com.ntropy.common.dto.user.command.UserUpdateCommand;
+import com.ntropy.user.api.dto.UserUpdateCommand;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

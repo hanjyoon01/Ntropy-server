@@ -2,7 +2,7 @@ package com.ntropy.bff.dto.work.response;
 
 import java.util.List;
 
-import com.ntropy.common.dto.work.summary.CategorySummary;
+import com.ntropy.work.api.dto.summary.CategorySummary;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

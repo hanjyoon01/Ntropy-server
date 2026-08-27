@@ -1,7 +1,7 @@
 package com.ntropy.bff.dto.subscription.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ntropy.common.dto.payment.PaymentSummary;
+import com.ntropy.payment.api.dto.PaymentSummary;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

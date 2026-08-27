@@ -13,10 +13,10 @@ import com.ntropy.bff.dto.common.ErrorCode;
 import com.ntropy.bff.dto.user.request.UserUpdateRequest;
 import com.ntropy.bff.dto.user.response.UserResponse;
 import com.ntropy.bff.security.AuthenticatedUserIdResolver;
-import com.ntropy.common.client.UserCommandClient;
-import com.ntropy.common.client.UserQueryClient;
-import com.ntropy.common.dto.user.UserSummary;
+import com.ntropy.user.api.client.UserCommandClient;
 import com.ntropy.common.exception.ServiceException;
+import com.ntropy.user.api.client.UserQueryClient;
+import com.ntropy.user.api.dto.UserSummary;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

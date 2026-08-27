@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.notification.request;
 
-import com.ntropy.common.dto.notification.PushSubscribeCommand;
+import com.ntropy.notification.api.dto.PushSubscribeCommand;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

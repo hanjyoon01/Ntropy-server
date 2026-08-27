@@ -3,7 +3,7 @@ package com.ntropy.bff.dto.ai;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ntropy.common.dto.ai.AiReportSummary;
+import com.ntropy.ai.api.dto.AiReportSummary;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

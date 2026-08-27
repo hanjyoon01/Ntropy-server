@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ntropy.bff.dto.work.response.CategoriesResponse;
 import com.ntropy.bff.dto.common.ApiResponse;
-import com.ntropy.common.client.CategoryQueryClient;
+import com.ntropy.work.api.client.CategoryQueryClient;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

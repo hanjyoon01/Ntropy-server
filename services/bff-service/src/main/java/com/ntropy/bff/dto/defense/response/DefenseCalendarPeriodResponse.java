@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.defense.response;
 
-import com.ntropy.common.dto.defense.summary.DefenseCalendarPeriodSummary;
+import com.ntropy.defense.api.dto.summary.DefenseCalendarPeriodSummary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

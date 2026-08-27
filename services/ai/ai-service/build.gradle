@@ -1,0 +1,40 @@
+// ==============================================================================
+// ai-service ëª¨ë“ˆ???˜ì¡´??ë°?ë¹Œë“œ ?¤ì • ?Œì¼
+// ==============================================================================
+
+dependencies {
+    // ê³µí†µ ëª¨ë“ˆ(common) ì°¸ì¡° (ê³µí†µ ? í‹¸ë¦¬í‹°, DTO ???¬ìš©)
+    implementation project(':common')
+    implementation project(':services:ai:ai-api')
+    implementation project(':services:user:user-api')
+    implementation project(':services:work:work-api')
+    implementation project(':services:account:account-api')
+    implementation project(':services:payment:payment-api')
+
+    // Spring Web MVC ?˜ì¡´??(Spring ?´ë…¸?Œì´??ë°?Web ê¸°ëŠ¥ ?¬ìš©)
+    implementation "org.springframework:spring-webmvc:${springVersion}"
+
+    // MyBatis?€ Spring ?„ë ˆ?„ì›Œ?¬ë? ?°ë™?˜ê¸° ?„í•œ ëª¨ë“ˆ
+    implementation 'org.mybatis:mybatis:3.5.13'
+    implementation 'org.mybatis:mybatis-spring:2.1.2'
+
+    // Lombok ?¼ì´ë¸ŒëŸ¬ë¦?(Getter, Setter, Builder ?±ì˜ ì½”ë“œ ?ë™ ?ì„±)
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    // AI_REPORT??JSON ë¬¸ì?´ì„ JsonNode ê°ì²´ë¡?ë³€?˜í•˜ê¸??„í•´ ?¬ìš©
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.4'
+
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+
+    // @Transactional ?´ë…¸?Œì´???œê³µ
+    implementation "org.springframework:spring-tx:$springVersion"
+
+    // AI ë¦¬í¬??PDF ë©”ëª¨ë¦??ì„± ë°?Gmail SMTP ì²¨ë? ë°œì†¡
+    implementation 'org.apache.pdfbox:pdfbox:3.0.8'
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
+    testImplementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+    testRuntimeOnly 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
+}

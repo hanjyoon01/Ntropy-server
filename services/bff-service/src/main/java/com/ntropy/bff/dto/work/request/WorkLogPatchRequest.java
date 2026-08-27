@@ -2,7 +2,7 @@ package com.ntropy.bff.dto.work.request;
 
 import java.time.LocalTime;
 
-import com.ntropy.common.dto.work.command.WorkLogPatchCommand;
+import com.ntropy.work.api.dto.command.WorkLogPatchCommand;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

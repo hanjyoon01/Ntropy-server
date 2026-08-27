@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.work.request;
 
-import com.ntropy.common.dto.work.command.SavingGoalRegisterCommand;
+import com.ntropy.work.api.dto.command.SavingGoalRegisterCommand;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

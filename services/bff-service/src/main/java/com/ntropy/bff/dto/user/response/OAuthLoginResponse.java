@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.user.response;
 
-import com.ntropy.common.dto.user.OAuthLoginResult;
+import com.ntropy.user.api.dto.OAuthLoginResult;
 
 public record OAuthLoginResponse(
         String accessToken,

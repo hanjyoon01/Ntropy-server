@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ntropy.bff.dto.work.response.PlatformsResponse;
 import com.ntropy.bff.dto.common.ApiResponse;
-import com.ntropy.common.client.PlatformQueryClient;
+import com.ntropy.work.api.client.PlatformQueryClient;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

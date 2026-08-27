@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.ai;
 
-import com.ntropy.common.dto.ai.AiReportEmailDeliverySummary;
+import com.ntropy.ai.api.dto.AiReportEmailDeliverySummary;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

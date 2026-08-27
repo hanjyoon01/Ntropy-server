@@ -1,7 +1,7 @@
 package com.ntropy.bff.dto.account.request;
 
+import com.ntropy.account.api.dto.AccountRegistrationCommand;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ntropy.common.dto.account.AccountRegistrationCommand;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

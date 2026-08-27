@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.ntropy.common.dto.work.command.JobRegisterCommand;
+import com.ntropy.work.api.dto.command.JobRegisterCommand;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

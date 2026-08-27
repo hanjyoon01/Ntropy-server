@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.ntropy.common.dto.work.summary.RecommendedWorkHoursSummary;
+import com.ntropy.work.api.dto.summary.RecommendedWorkHoursSummary;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

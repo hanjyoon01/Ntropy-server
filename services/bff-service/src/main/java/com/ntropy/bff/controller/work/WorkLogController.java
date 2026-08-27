@@ -16,7 +16,7 @@ import com.ntropy.bff.dto.work.request.WorkLogPatchRequest;
 import com.ntropy.bff.dto.work.request.WorkLogRegisterRequest;
 import com.ntropy.bff.dto.work.response.WorkLogCreateResponse;
 import com.ntropy.bff.security.AuthenticatedUserIdResolver;
-import com.ntropy.common.client.WorkLogCommandClient;
+import com.ntropy.work.api.client.WorkLogCommandClient;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

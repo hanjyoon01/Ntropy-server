@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ntropy.account.api.dto.AccountRegistrationCommand;
 import com.ntropy.bff.dto.account.request.AccountRegistrationRequest;
-import com.ntropy.common.dto.account.AccountRegistrationCommand;
 
 class FinancialAccountControllerContractTest {
 

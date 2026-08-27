@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ntropy.bff.dto.common.ApiResponse;
 import com.ntropy.bff.dto.diagnosis.response.DiagnosisResponse;
 import com.ntropy.bff.security.AuthenticatedUserIdResolver;
-import com.ntropy.common.client.DiagnosisResultQueryClient;
-import com.ntropy.common.dto.diagnosis.DiagnosisResultSummary;
+import com.ntropy.diagnosis.api.client.DiagnosisResultQueryClient;
+import com.ntropy.diagnosis.api.dto.DiagnosisResultSummary;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

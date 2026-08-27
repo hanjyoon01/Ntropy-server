@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.defense.response;
 
-import com.ntropy.common.dto.defense.summary.DefenseChecklistSummary;
+import com.ntropy.defense.api.dto.summary.DefenseChecklistSummary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

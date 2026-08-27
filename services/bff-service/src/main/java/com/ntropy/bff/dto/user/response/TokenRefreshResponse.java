@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.user.response;
 
-import com.ntropy.common.dto.user.TokenPair;
+import com.ntropy.user.api.dto.TokenPair;
 
 public record TokenRefreshResponse(
         String accessToken,

@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ntropy.bff.dto.common.ApiResponse;
-import com.ntropy.common.client.WeatherQueryClient;
-import com.ntropy.common.dto.work.summary.WeatherForecastList;
+import com.ntropy.work.api.client.WeatherQueryClient;
+import com.ntropy.work.api.dto.summary.WeatherForecastList;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

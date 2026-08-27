@@ -16,9 +16,9 @@ import com.ntropy.bff.dto.notification.request.PushSubscriptionRequest;
 import com.ntropy.bff.dto.notification.response.NotificationsResponse;
 import com.ntropy.bff.dto.notification.response.UnreadCountResponse;
 import com.ntropy.bff.security.AuthenticatedUserIdResolver;
-import com.ntropy.common.client.NotificationCommandClient;
-import com.ntropy.common.client.NotificationQueryClient;
-import com.ntropy.common.client.PushSubscriptionCommandClient;
+import com.ntropy.notification.api.client.NotificationCommandClient;
+import com.ntropy.notification.api.client.NotificationQueryClient;
+import com.ntropy.notification.api.client.PushSubscriptionCommandClient;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

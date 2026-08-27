@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ntropy.common.dto.work.summary.JobCandidateSummary;
+import com.ntropy.work.api.dto.summary.JobCandidateSummary;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -3,7 +3,7 @@ package com.ntropy.bff.dto.work.response;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ntropy.common.dto.work.summary.JobSummary;
+import com.ntropy.work.api.dto.summary.JobSummary;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

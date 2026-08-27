@@ -9,9 +9,9 @@ import com.ntropy.bff.dto.ai.AiReportResponse;
 import com.ntropy.bff.dto.ai.AiReportEmailDeliveryResponse;
 import com.ntropy.bff.dto.common.ApiResponse;
 import com.ntropy.bff.security.AuthenticatedUserIdResolver;
-import com.ntropy.common.client.AiReportEmailDeliveryClient;
-import com.ntropy.common.client.AiReportQueryClient;
-import com.ntropy.common.dto.ai.AiReportSummary;
+import com.ntropy.ai.api.client.AiReportEmailDeliveryClient;
+import com.ntropy.ai.api.client.AiReportQueryClient;
+import com.ntropy.ai.api.dto.AiReportSummary;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

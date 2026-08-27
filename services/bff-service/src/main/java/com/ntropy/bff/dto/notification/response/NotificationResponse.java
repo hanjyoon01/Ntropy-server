@@ -3,7 +3,7 @@ package com.ntropy.bff.dto.notification.response;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ntropy.common.dto.notification.NotificationSummary;
+import com.ntropy.notification.api.dto.NotificationSummary;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

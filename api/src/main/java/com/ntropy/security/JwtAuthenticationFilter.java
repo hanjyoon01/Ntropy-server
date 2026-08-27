@@ -1,7 +1,7 @@
 package com.ntropy.security;
 
-import com.ntropy.common.client.TokenVerifier;
-import com.ntropy.common.dto.user.VerifiedToken;
+import com.ntropy.user.api.client.TokenVerifier;
+import com.ntropy.user.api.dto.VerifiedToken;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

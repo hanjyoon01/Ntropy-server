@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ntropy.bff.converter.ai.AiReportRecommendationConverter;
-import com.ntropy.common.dto.ai.AiReportDetailSummary;
-import com.ntropy.common.dto.ai.AiReportSummary;
+import com.ntropy.ai.api.dto.AiReportDetailSummary;
+import com.ntropy.ai.api.dto.AiReportSummary;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

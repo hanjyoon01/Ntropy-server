@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ntropy.bff.dto.common.ApiResponse;
-import com.ntropy.common.client.VirtualSettlementDepositBatchCommandClient;
-import com.ntropy.common.client.VirtualSettlementDepositBatchCommandClient.BatchResult;
+import com.ntropy.work.api.client.VirtualSettlementDepositBatchCommandClient;
+import com.ntropy.work.api.client.VirtualSettlementDepositBatchCommandClient.BatchResult;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

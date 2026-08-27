@@ -1,0 +1,7 @@
+dependencies {
+    implementation project(':common')
+    implementation project(':services:work:work-api')
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+}

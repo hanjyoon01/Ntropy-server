@@ -4,17 +4,25 @@ plugins {
 
 dependencies {
     implementation project(':common')
-    implementation project(':services:user-service')
-    implementation project(':services:account-service')
-    implementation project(':services:work-service')
-    implementation project(':services:diagnosis-service')
-    implementation project(':services:defense-service')
-    implementation project(':services:payment-service')
-    implementation project(':services:notification-service')
+    implementation project(':services:user:user-api')
+    implementation project(':services:account:account-api')
+    implementation project(':services:work:work-api')
+    implementation project(':services:diagnosis:diagnosis-api')
+    implementation project(':services:defense:defense-api')
+    implementation project(':services:payment:payment-api')
+    implementation project(':services:notification:notification-api')
+    implementation project(':services:ai:ai-api')
+    implementation project(':services:user:user-service')
+    implementation project(':services:account:account-service')
+    implementation project(':services:work:work-service')
+    implementation project(':services:diagnosis:diagnosis-service')
+    implementation project(':services:defense:defense-service')
+    implementation project(':services:payment:payment-service')
+    implementation project(':services:notification:notification-service')
     implementation project(':services:bff-service')
-    implementation project(':services:ai-service')
+    implementation project(':services:ai:ai-service')
 
-    // 스프링
+    // ?�프�?
     implementation ("org.springframework:spring-context:${springVersion}")
             { exclude group: 'commons-logging', module: 'commons-logging' }
     implementation "org.springframework:spring-webmvc:${springVersion}"
@@ -22,7 +30,7 @@ dependencies {
     implementation "org.springframework:spring-tx:${springVersion}"
     implementation 'javax.inject:javax.inject:1'
 
-    // Spring Security (인증 필터 체인)
+    // Spring Security (?�증 ?�터 체인)
     implementation "org.springframework.security:spring-security-web:${securityVersion}"
     implementation "org.springframework.security:spring-security-config:${securityVersion}"
 
@@ -40,7 +48,7 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
     implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.20.0'
 
-    // xml내 한글 처리
+    // xml???��? 처리
     implementation 'xerces:xercesImpl:2.12.2'
 
     // Lombok
@@ -60,7 +68,7 @@ dependencies {
     implementation 'io.springfox:springfox-swagger2:2.9.2'
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 
-    // 테스트
+    // ?�스??
     testImplementation "org.springframework:spring-test:${springVersion}"
     testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
     testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"

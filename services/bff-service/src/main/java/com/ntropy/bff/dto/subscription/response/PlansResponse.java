@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.subscription.response;
 
-import com.ntropy.common.dto.payment.PlanSummary;
+import com.ntropy.payment.api.dto.PlanSummary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

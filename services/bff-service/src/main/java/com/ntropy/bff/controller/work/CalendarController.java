@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ntropy.bff.dto.common.ApiResponse;
 import com.ntropy.bff.security.AuthenticatedUserIdResolver;
-import com.ntropy.common.client.CalendarQueryClient;
-import com.ntropy.common.dto.work.summary.CalendarDailySummary;
-import com.ntropy.common.dto.work.summary.CalendarMonthlySummary;
+import com.ntropy.work.api.client.CalendarQueryClient;
+import com.ntropy.work.api.dto.summary.CalendarDailySummary;
+import com.ntropy.work.api.dto.summary.CalendarMonthlySummary;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

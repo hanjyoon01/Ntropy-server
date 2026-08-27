@@ -22,13 +22,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ntropy.bff.dto.common.ErrorCode;
 import com.ntropy.bff.exception.GlobalExceptionHandler;
 import com.ntropy.bff.security.AuthenticatedUserIdResolver;
-import com.ntropy.common.client.UserCommandClient;
-import com.ntropy.common.client.UserQueryClient;
-import com.ntropy.common.dto.user.OAuthLoginResult;
-import com.ntropy.common.dto.user.TokenPair;
-import com.ntropy.common.dto.user.UserSummary;
-import com.ntropy.common.dto.user.command.UserUpdateCommand;
+import com.ntropy.user.api.client.UserCommandClient;
+import com.ntropy.user.api.dto.OAuthLoginResult;
+import com.ntropy.user.api.dto.TokenPair;
+import com.ntropy.user.api.dto.UserUpdateCommand;
 import com.ntropy.common.exception.ServiceException;
+import com.ntropy.user.api.client.UserQueryClient;
+import com.ntropy.user.api.dto.UserSummary;
 
 class AuthControllerContractTest {
 

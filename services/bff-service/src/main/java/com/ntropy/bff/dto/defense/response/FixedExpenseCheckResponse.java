@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.defense.response;
 
-import com.ntropy.common.dto.defense.summary.FixedExpenseCheckSummary;
+import com.ntropy.defense.api.dto.summary.FixedExpenseCheckSummary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

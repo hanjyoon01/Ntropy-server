@@ -19,11 +19,13 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
-import com.ntropy.common.dto.defense.command.DefenseModeEnterCommand;
+import com.ntropy.defense.api.dto.command.DefenseModeEnterCommand;
+import com.ntropy.defense.adapter.diagnosis.DiagnosisSnapshotAdapter;
 import com.ntropy.defense.domain.DefenseCalculationStatus;
 import com.ntropy.defense.domain.DefenseMode;
 import com.ntropy.defense.domain.DefenseModeStatus;
 import com.ntropy.defense.mapper.DefenseModeMapper;
+import com.ntropy.defense.port.diagnosis.DiagnosisRecalculationPort;
 import com.ntropy.defense.service.DefenseModeService;
 import com.ntropy.diagnosis.client.LocalDiagnosisQueryClient;
 import com.ntropy.diagnosis.domain.entity.DiagnosisResult;
@@ -41,12 +43,19 @@ class DiagnosisDefenseWiringTest {
                     type = FilterType.ASSIGNABLE_TYPE,
                     classes = {
                             LocalDiagnosisQueryClient.class,
+                            DiagnosisSnapshotAdapter.class,
                             DiagnosisResultService.class,
                             DefenseModeService.class
                     }
             )
     )
     static class TestConfig {
+
+        @Bean
+        DiagnosisRecalculationPort diagnosisRecalculationPort() {
+            // 이 와이어링 테스트는 기존 재무진단 결과 조회 경로만 검증하므로 재계산은 no-op으로 둔다.
+            return (userId, yearMonth) -> { };
+        }
 
         @Bean
         DiagnosisResultMapper diagnosisResultMapper() {

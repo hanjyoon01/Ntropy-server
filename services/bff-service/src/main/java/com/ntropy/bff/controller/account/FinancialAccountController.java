@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ntropy.account.api.client.AccountQueryClient;
+import com.ntropy.account.api.client.FinancialAccountCommandClient;
+import com.ntropy.account.api.dto.AccountRegistrationSummary;
+import com.ntropy.account.api.dto.AccountTransactionSummary;
+import com.ntropy.account.api.dto.MyDataConnectionSummary;
 import com.ntropy.bff.dto.account.request.AccountRegistrationRequest;
 import com.ntropy.bff.dto.account.response.AccountActivationResponse;
 import com.ntropy.bff.dto.account.response.AccountDeactivationResponse;
@@ -21,11 +26,6 @@ import com.ntropy.bff.dto.account.response.AccountsResponse;
 import com.ntropy.bff.dto.account.response.BanksResponse;
 import com.ntropy.bff.dto.common.ApiResponse;
 import com.ntropy.bff.security.AuthenticatedUserIdResolver;
-import com.ntropy.common.client.AccountQueryClient;
-import com.ntropy.common.client.FinancialAccountCommandClient;
-import com.ntropy.common.dto.account.AccountRegistrationSummary;
-import com.ntropy.common.dto.account.AccountTransactionSummary;
-import com.ntropy.common.dto.account.MyDataConnectionSummary;
 import com.ntropy.common.dto.account.PageSummary;
 
 import io.swagger.annotations.Api;

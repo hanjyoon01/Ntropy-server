@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ntropy.account.mapper.FinancialDataQueryMapper">
+
+    <select id="findUnanalyzedTransactions"
+            resultType="com.ntropy.account.api.dto.DailyClassificationTargetTransaction">
+        SELECT
+            transaction_row.account_transaction_id AS transactionId,
+            account_row.user_id AS userId,
+            transaction_row.transaction_category AS transactionCategory,
+            CAST(transaction_row.out_amount AS SIGNED) AS outAmount,
+            CAST(transaction_row.in_amount AS SIGNED) AS inAmount,
+            account_row.organization_code AS organizationCode,
+            transaction_row.loan_transaction_type_name AS loanTransactionTypeName,
+            transaction_row.desc1,
+            transaction_row.desc2,
+            transaction_row.desc3,
+            transaction_row.desc4
+        FROM ACCOUNT_TRANSACTION transaction_row
+                 INNER JOIN ACCOUNT account_row
+                            ON account_row.account_id = transaction_row.account_id
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM TXN_ANALYSIS analysis_row
+            WHERE analysis_row.account_transaction_id
+                      = transaction_row.account_transaction_id
+        )
+          AND (
+            (
+                transaction_row.transaction_category = 'ORDINARY'
+                    AND transaction_row.out_amount &gt; 0
+                )
+                OR (
+                transaction_row.transaction_category = 'INSTALLMENT'
+                    AND transaction_row.in_amount &gt; 0
+                )
+                OR (
+                transaction_row.transaction_category = 'LOAN'
+                    AND transaction_row.out_amount &gt; 0
+                )
+            )
+        ORDER BY transaction_row.account_transaction_id
+            LIMIT #{limit}
+    </select>
+
+    <select id="findUnanalyzedTransactionsByUserId"
+            resultType="com.ntropy.account.api.dto.DailyClassificationTargetTransaction">
+        SELECT
+            transaction_row.account_transaction_id AS transactionId,
+            account_row.user_id AS userId,
+            transaction_row.transaction_category AS transactionCategory,
+            CAST(transaction_row.out_amount AS SIGNED) AS outAmount,
+            CAST(transaction_row.in_amount AS SIGNED) AS inAmount,
+            account_row.organization_code AS organizationCode,
+            transaction_row.loan_transaction_type_name AS loanTransactionTypeName,
+            transaction_row.desc1,
+            transaction_row.desc2,
+            transaction_row.desc3,
+            transaction_row.desc4
+        FROM ACCOUNT_TRANSACTION transaction_row
+                 INNER JOIN ACCOUNT account_row
+                            ON account_row.account_id = transaction_row.account_id
+        WHERE account_row.user_id = #{userId}
+          AND NOT EXISTS (
+            SELECT 1
+            FROM TXN_ANALYSIS analysis_row
+            WHERE analysis_row.account_transaction_id
+                      = transaction_row.account_transaction_id
+        )
+          AND (
+            (
+                transaction_row.transaction_category = 'ORDINARY'
+                    AND transaction_row.out_amount &gt; 0
+                )
+                OR (
+                transaction_row.transaction_category = 'INSTALLMENT'
+                    AND transaction_row.in_amount &gt; 0
+                )
+                OR (
+                transaction_row.transaction_category = 'LOAN'
+                    AND transaction_row.out_amount &gt; 0
+                )
+            )
+        ORDER BY transaction_row.account_transaction_id
+        LIMIT #{limit}
+    </select>
+
+
+    <sql id="accountColumns">
+        account_row.account_id AS id, account_row.codef_connection_id AS codefConnectionId,
+        account_row.user_id AS userId, connection_row.provider AS connectionProvider,
+        account_row.organization_code AS organizationCode, account_row.account_group AS accountGroup,
+        account_row.deposit_type_code AS depositTypeCode, account_row.account_no_masked AS accountNoMasked,
+        account_row.account_no_hash AS accountNoHash, account_row.account_name AS accountName,
+        account_row.balance,
+        account_row.loan_contract_principal AS loanContractPrincipal, account_row.interest_rate AS interestRate,
+        account_row.currency_code AS currencyCode,
+        account_row.account_start_date AS accountStartDate, account_row.maturity_date AS maturityDate,
+        account_row.last_tran_date AS lastTranDate,
+        account_row.overdraft_yn AS overdraftYn, account_row.next_payment_date AS nextPaymentDate,
+        account_row.status, account_row.deactivated_at AS deactivatedAt,
+        account_row.created_at AS createdAt, account_row.updated_at AS updatedAt
+    </sql>
+
+    <select id="findAccountsByUserId" resultType="com.ntropy.account.domain.entity.Account">
+        SELECT <include refid="accountColumns"/>
+        FROM ACCOUNT account_row
+                 INNER JOIN CODEF_CONNECTION connection_row
+                            ON connection_row.codef_connection_id = account_row.codef_connection_id
+        WHERE account_row.user_id = #{userId}
+          AND account_row.status = 'ACTIVE'
+        ORDER BY account_row.account_id
+    </select>
+
+    <select id="findAccountByIdAndUserId" resultType="com.ntropy.account.domain.entity.Account">
+        SELECT <include refid="accountColumns"/>
+        FROM ACCOUNT account_row
+                 INNER JOIN CODEF_CONNECTION connection_row
+                            ON connection_row.codef_connection_id = account_row.codef_connection_id
+        WHERE account_row.account_id = #{accountId}
+          AND account_row.user_id = #{userId}
+          AND account_row.status = 'ACTIVE'
+    </select>
+
+    <!-- 소유 계좌가 있으면 거래가 0건이어도 집계 행 하나를 반환한다. -->
+    <select id="countTransactionsByAccountIdAndUserId"
+            resultType="com.ntropy.account.mapper.projection.OwnedTransactionCountRow">
+        SELECT account_row.account_id AS ownedAccountId,
+               COUNT(transaction_row.account_transaction_id) AS totalElements
+        FROM ACCOUNT account_row
+                 LEFT JOIN ACCOUNT_TRANSACTION transaction_row
+                           ON transaction_row.account_id = account_row.account_id
+                           <if test="startDate != null">
+                               AND transaction_row.tran_date &gt;= #{startDate}
+                           </if>
+                           <if test="endDate != null">
+                               AND transaction_row.tran_date &lt;= #{endDate}
+                           </if>
+        WHERE account_row.account_id = #{accountId}
+          AND account_row.user_id = #{userId}
+          AND account_row.status = 'ACTIVE'
+        GROUP BY account_row.account_id
+    </select>
+
+    <select id="findTransactionsByAccountIdAndUserId"
+            resultType="com.ntropy.account.mapper.projection.OwnedAccountTransactionRow">
+        SELECT account_row.account_id                  AS ownedAccountId,
+               transaction_row.account_transaction_id AS transactionId,
+               transaction_row.transaction_category   AS transactionCategory,
+               transaction_row.tran_date              AS transactionDate,
+               transaction_row.tran_time              AS transactionTime,
+               transaction_row.out_amount             AS outAmount,
+               transaction_row.in_amount              AS inAmount,
+               transaction_row.loan_transaction_type_name AS loanTransactionTypeName,
+               transaction_row.loan_principal_amount  AS loanPrincipalAmount,
+               transaction_row.loan_interest_amount   AS loanInterestAmount,
+               transaction_row.after_balance          AS afterBalance,
+               transaction_row.desc1,
+               transaction_row.desc2,
+               transaction_row.desc3,
+               transaction_row.desc4
+        FROM ACCOUNT account_row
+                 INNER JOIN ACCOUNT_TRANSACTION transaction_row
+                           ON transaction_row.account_id = account_row.account_id
+        WHERE account_row.account_id = #{accountId}
+          AND account_row.user_id = #{userId}
+          AND account_row.status = 'ACTIVE'
+        <if test="startDate != null">
+          AND transaction_row.tran_date &gt;= #{startDate}
+        </if>
+        <if test="endDate != null">
+          AND transaction_row.tran_date &lt;= #{endDate}
+        </if>
+        ORDER BY transaction_row.tran_date DESC,
+                 transaction_row.tran_time DESC,
+                 transaction_row.account_transaction_id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <sql id="classificationTargetFilter">
+        account_row.user_id = #{userId}
+          AND account_row.status = 'ACTIVE'
+          AND transaction_row.transaction_category = 'ORDINARY'
+          AND transaction_row.out_amount > 0
+          AND DATE_FORMAT(transaction_row.tran_date, '%Y-%m') = #{yearMonth}
+    </sql>
+
+    <select id="findClassificationTargets"
+            resultType="com.ntropy.account.api.dto.ClassificationTargetTransaction">
+
+        SELECT
+            transaction_row.account_transaction_id AS transactionId,
+            NULLIF(TRIM(transaction_row.desc3), '') AS merchantName,
+            CONCAT_WS(
+                    ' | ',
+                    NULLIF(TRIM(transaction_row.desc2), ''),
+                    NULLIF(TRIM(transaction_row.desc3), ''),
+                    NULLIF(TRIM(transaction_row.desc4), '')
+            ) AS description,
+            CAST(transaction_row.out_amount AS SIGNED) AS amount,
+            TIMESTAMP(
+            transaction_row.tran_date,
+            transaction_row.tran_time
+            ) AS transactionDate
+        FROM ACCOUNT account_row
+            INNER JOIN ACCOUNT_TRANSACTION transaction_row
+        ON transaction_row.account_id = account_row.account_id
+        WHERE <include refid="classificationTargetFilter"/>
+        ORDER BY
+            transaction_row.tran_date,
+            transaction_row.tran_time,
+            transaction_row.account_transaction_id
+    </select>
+
+    <select id="findValidTransactionIds" resultType="java.lang.Long">
+        SELECT transaction_row.account_transaction_id
+        FROM ACCOUNT account_row
+            INNER JOIN ACCOUNT_TRANSACTION transaction_row
+        ON transaction_row.account_id = account_row.account_id
+        WHERE <include refid="classificationTargetFilter"/>
+          AND transaction_row.account_transaction_id IN
+          <foreach collection="transactionIds" item="id" open="(" separator="," close=")">
+              #{id}
+          </foreach>
+    </select>
+
+
+</mapper>

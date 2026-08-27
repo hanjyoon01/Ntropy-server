@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ntropy.bff.dto.common.ApiResponse;
 import com.ntropy.bff.dto.notification.response.NotificationsResponse;
 import com.ntropy.bff.security.AuthenticatedUserIdResolver;
-import com.ntropy.common.client.NotificationQueryClient;
+import com.ntropy.notification.api.client.NotificationQueryClient;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

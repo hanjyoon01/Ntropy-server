@@ -30,9 +30,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ntropy.bff.dto.common.ErrorCode;
 import com.ntropy.bff.exception.GlobalExceptionHandler;
 import com.ntropy.bff.security.AuthenticatedUserIdResolver;
-import com.ntropy.common.client.DiagnosisResultQueryClient;
-import com.ntropy.common.dto.diagnosis.DiagnosisResultSummary;
 import com.ntropy.common.exception.ServiceException;
+import com.ntropy.diagnosis.api.client.DiagnosisResultQueryClient;
+import com.ntropy.diagnosis.api.dto.DiagnosisResultSummary;
 
 class DiagnosisControllerContractTest {
 

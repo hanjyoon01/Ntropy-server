@@ -1,0 +1,13 @@
+dependencies {
+    implementation project(':common')
+    implementation project(':services:diagnosis:diagnosis-api')
+    implementation project(':services:account:account-api')
+    implementation project(':services:work:work-api')
+    implementation "org.springframework:spring-webmvc:${springVersion}"
+    implementation 'org.mybatis:mybatis-spring:2.1.2'
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    implementation 'org.mybatis:mybatis:3.5.13'
+    implementation "org.springframework:spring-tx:${springVersion}"
+}

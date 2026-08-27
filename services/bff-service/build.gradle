@@ -1,16 +1,24 @@
 dependencies {
     implementation project(':common')
+    implementation project(':services:user:user-api')
+    implementation project(':services:account:account-api')
+    implementation project(':services:work:work-api')
+    implementation project(':services:diagnosis:diagnosis-api')
+    implementation project(':services:defense:defense-api')
+    implementation project(':services:payment:payment-api')
+    implementation project(':services:notification:notification-api')
+    implementation project(':services:ai:ai-api')
     implementation "org.springframework:spring-webmvc:${springVersion}"
     implementation 'org.apache.logging.log4j:log4j-api:2.18.0'
 
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
-    //날짜 json 포맷
+    //?�짜 json ?�맷
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.4'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4'
 
-    //auth를 위해 임시로..
+    //auth�??�해 ?�시�?.
     implementation "org.springframework.security:spring-security-core:${securityVersion}"
     compileOnly 'io.swagger:swagger-annotations:1.5.20'
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'

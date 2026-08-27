@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.user.response;
 
-import com.ntropy.common.dto.user.UserSummary;
+import com.ntropy.user.api.dto.UserSummary;
 
 public record UserResponse(
         Long userId,

@@ -1,6 +1,6 @@
 package com.ntropy.bff.dto.defense.response;
 
-import com.ntropy.common.dto.work.summary.JobExpectedIncomeLossSummary;
+import com.ntropy.work.api.dto.summary.JobExpectedIncomeLossSummary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
