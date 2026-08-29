@@ -8,7 +8,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
-import com.ntropy.common.client.TransactionClassificationCommandClient;
+import com.ntropy.account.port.ai.TransactionClassificationPort;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,15 +17,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AccountTransactionClassificationListener {
 
-    private final TransactionClassificationCommandClient classificationCommandClient;
+    private final TransactionClassificationPort transactionClassificationPort;
     private final TaskExecutor classificationJobExecutor;
     private final Set<Long> runningUserIds = ConcurrentHashMap.newKeySet();
 
     public AccountTransactionClassificationListener(
-            TransactionClassificationCommandClient classificationCommandClient,
+            TransactionClassificationPort transactionClassificationPort,
             @Qualifier("accountClassificationJobExecutor") TaskExecutor classificationJobExecutor
     ) {
-        this.classificationCommandClient = classificationCommandClient;
+        this.transactionClassificationPort = transactionClassificationPort;
         this.classificationJobExecutor = classificationJobExecutor;
     }
 
@@ -53,7 +53,7 @@ public class AccountTransactionClassificationListener {
         log.info("[비동기 소비 분류] 작업 시작. scope=userId={}", userId);
 
         try {
-            int processed = classificationCommandClient.classifyUnanalyzedTransactions(userId);
+            int processed = transactionClassificationPort.classifyUnanalyzedTransactions(userId);
             log.info(
                     "[비동기 소비 분류] 작업 완료. scope=userId={}, totalProcessed={}, elapsedMs={}",
                     userId, processed, elapsedMillis(startedAt)

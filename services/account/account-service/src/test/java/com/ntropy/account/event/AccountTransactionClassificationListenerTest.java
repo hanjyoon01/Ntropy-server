@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.core.task.TaskRejectedException;
 
-import com.ntropy.common.client.TransactionClassificationCommandClient;
+import com.ntropy.account.port.ai.TransactionClassificationPort;
 
 class AccountTransactionClassificationListenerTest {
 
@@ -102,7 +102,7 @@ class AccountTransactionClassificationListenerTest {
     }
 
     private static class RecordingClassificationClient
-            implements TransactionClassificationCommandClient {
+            implements TransactionClassificationPort {
         private final List<Long> userIds = new ArrayList<>();
         private RuntimeException failure;
 
